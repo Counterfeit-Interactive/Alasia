@@ -15,9 +15,8 @@ material = SubResource("StandardMaterial3D_635qg")
 
 [sub_resource type="SphereMesh" id="SphereMesh_1hmtu"]
 
-[sub_resource type="SphereMesh" id="SphereMesh_1hmtu"]
-
 [node name="Player" type="CharacterBody3D" unique_id=1476267170]
+collision_layer = 3
 script = ExtResource("1_1hmtu")
 
 [node name="CameraController" parent="." unique_id=1517576618 instance=ExtResource("2_635qg")]

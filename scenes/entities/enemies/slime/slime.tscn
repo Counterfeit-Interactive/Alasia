@@ -16,7 +16,6 @@ material = SubResource("StandardMaterial3D_2xo21")
 [node name="Slime" unique_id=2083691153 instance=ExtResource("1_2oqe7")]
 script = ExtResource("1_knqjk")
 speed = 2.0
-area_radius = 5.0
 
 [node name="CollisionShape3D" parent="." index="0" unique_id=1590336534]
 shape = SubResource("SphereShape3D_2xo21")
