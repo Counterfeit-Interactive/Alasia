@@ -1,0 +1,38 @@
+[gd_scene format=3 uid="uid://w20kcyyq5svx"]
+
+[ext_resource type="PackedScene" uid="uid://rdusje8xkkmw" path="res://scenes/entities/enemies/enemy.tscn" id="1_2oqe7"]
+[ext_resource type="Script" uid="uid://5hnfusq8u5nr" path="res://scenes/entities/enemies/slime/slime.gd" id="1_knqjk"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_2xo21"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2xo21"]
+albedo_color = Color(0.16937947, 0.56714135, 0.75259817, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_d6ha7"]
+material = SubResource("StandardMaterial3D_2xo21")
+
+[sub_resource type="SphereMesh" id="SphereMesh_2xo21"]
+
+[node name="Slime" unique_id=2083691153 instance=ExtResource("1_2oqe7")]
+script = ExtResource("1_knqjk")
+speed = 2.0
+area_radius = 5.0
+
+[node name="CollisionShape3D" parent="." index="0" unique_id=1590336534]
+shape = SubResource("SphereShape3D_2xo21")
+
+[node name="Mesh" type="Node3D" parent="." index="1" unique_id=69142072]
+
+[node name="Body" type="MeshInstance3D" parent="Mesh" index="0" unique_id=1251155945]
+mesh = SubResource("SphereMesh_d6ha7")
+
+[node name="Eye1" type="MeshInstance3D" parent="Mesh" index="1" unique_id=1030215084]
+transform = Transform3D(0.28408045, 0, 0, 0, 0.28408045, 0, 0, 0, 0.28408045, -0.23112418, 0.14319882, 0.30336455)
+mesh = SubResource("SphereMesh_2xo21")
+
+[node name="Eye2" type="MeshInstance3D" parent="Mesh" index="2" unique_id=117252322]
+transform = Transform3D(0.28408045, 0, 0, 0, 0.28408045, 0, 0, 0, 0.28408045, 0.231, 0.14319882, 0.30316976)
+mesh = SubResource("SphereMesh_2xo21")
+
+[node name="JumpCooldown" type="Timer" parent="." index="2" unique_id=1892913740]
+one_shot = true

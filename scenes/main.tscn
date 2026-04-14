@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://bnpgssfgiei4s" path="res://scenes/main.gd" id="1_ig7tw"]
 [ext_resource type="PackedScene" uid="uid://dkk8gj45natou" path="res://scenes/levels/test_level.tscn" id="2_0wfyh"]
 [ext_resource type="PackedScene" uid="uid://dlp61u7utr45p" path="res://scenes/entities/player/player.tscn" id="3_sugp2"]
+[ext_resource type="PackedScene" uid="uid://w20kcyyq5svx" path="res://scenes/entities/enemies/slime/slime.tscn" id="4_jyhfs"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_0wfyh"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -31,3 +32,6 @@ shadow_enabled = true
 
 [node name="Player" parent="." unique_id=1476267170 instance=ExtResource("3_sugp2")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8511121, 0)
+
+[node name="Slime" parent="." unique_id=2083691153 instance=ExtResource("4_jyhfs")]
+transform = Transform3D(-0.021011736, -0.0014804568, -0.99977815, -0.00061563106, 0.9999988, -0.0014678449, 0.99977905, 0.0005846524, -0.021012627, -1.069221, 0.9623189, -7.9041576)

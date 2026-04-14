@@ -1,12 +1,17 @@
 extends CharacterBody3D
 
-@onready var body: Node3D = $Body
-@onready var camera: Camera3D = $CameraController/Camera3D
-
 const SPEED = 8.0
 const JUMP_VELOCITY = 6.5
 const FALL_VELOCITY = 1.5
 
+@onready var mesh: Node3D = $Mesh
+@onready var camera: Camera3D = $CameraController/Camera3D
+
+var health = 5:
+	set(value):
+		health = value
+		if health <= 0:
+			get_tree().quit()
 
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():
@@ -19,7 +24,7 @@ func _physics_process(delta: float) -> void:
 	var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	if direction:
 		var target_angle = PI/2 - input_dir.angle()
-		body.rotation.y = rotate_toward(body.rotation.y, target_angle, 20 * delta)
+		mesh.rotation.y = rotate_toward(mesh.rotation.y, target_angle, 20 * delta)
 		velocity.x = direction.x * SPEED
 		velocity.z = direction.z * SPEED
 	else:
