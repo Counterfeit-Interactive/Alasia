@@ -7,8 +7,17 @@ const SPEED = 8.0
 const JUMP_VELOCITY = 6.5
 const FALL_VELOCITY = 1.5
 
+var nickname: String = ""
+
+func _enter_tree() -> void:
+	set_multiplayer_authority(name.to_int())
+	$CameraController.set_multiplayer_authority(name.to_int())
+
+	# Hide HUD
 
 func _physics_process(delta: float) -> void:
+	
+	if !is_multiplayer_authority(): return
 	if not is_on_floor():
 		velocity += get_gravity() * delta * FALL_VELOCITY
 
