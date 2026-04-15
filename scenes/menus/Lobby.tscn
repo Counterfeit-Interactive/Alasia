@@ -1,0 +1,67 @@
+[gd_scene format=3 uid="uid://memccy16nam6"]
+
+[ext_resource type="Script" uid="uid://bwdyc18jiy1ul" path="res://scenes/menus/lobby.gd" id="1_la43x"]
+
+[node name="Lobby" type="Control" unique_id=209315210]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_la43x")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=124651515]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -39.5
+offset_top = -130.0
+offset_right = 39.5
+offset_bottom = 130.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HostContainer" type="VBoxContainer" parent="VBoxContainer" unique_id=162852079]
+layout_mode = 2
+
+[node name="HostLabel" type="Label" parent="VBoxContainer/HostContainer" unique_id=1759802820]
+layout_mode = 2
+text = "Host Game"
+
+[node name="PortInput" type="LineEdit" parent="VBoxContainer/HostContainer" unique_id=1131026105]
+layout_mode = 2
+text = "57000"
+placeholder_text = "IP"
+
+[node name="Host" type="Button" parent="VBoxContainer/HostContainer" unique_id=1679947918]
+layout_mode = 2
+text = "Host"
+
+[node name="JoinContainer" type="VBoxContainer" parent="VBoxContainer" unique_id=1065567394]
+layout_mode = 2
+
+[node name="JoinLabel" type="Label" parent="VBoxContainer/JoinContainer" unique_id=906262425]
+layout_mode = 2
+text = "Join Game"
+
+[node name="IPInput" type="LineEdit" parent="VBoxContainer/JoinContainer" unique_id=88196286]
+layout_mode = 2
+text = "127.0.0.1"
+placeholder_text = "IP"
+
+[node name="PortInput" type="LineEdit" parent="VBoxContainer/JoinContainer" unique_id=1265747148]
+layout_mode = 2
+text = "57000"
+placeholder_text = "IP"
+
+[node name="Join" type="Button" parent="VBoxContainer/JoinContainer" unique_id=1476005134]
+layout_mode = 2
+text = "Join
+"
+
+[connection signal="pressed" from="VBoxContainer/HostContainer/Host" to="." method="_on_host_pressed"]
+[connection signal="pressed" from="VBoxContainer/JoinContainer/Join" to="." method="_on_join_pressed"]

@@ -11,6 +11,14 @@
 
 [sub_resource type="SphereMesh" id="SphereMesh_1hmtu"]
 
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_635qg"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+
 [node name="Player" type="CharacterBody3D" unique_id=1476267170]
 script = ExtResource("1_1hmtu")
 
@@ -34,3 +42,6 @@ mesh = SubResource("SphereMesh_1hmtu")
 [node name="Eye2" type="MeshInstance3D" parent="Body" unique_id=1874650018]
 transform = Transform3D(0.28408045, 0, 0, 0, 0.28408045, 0, 0, 0, 0.28408045, 0.231, 0.465, 0.45699874)
 mesh = SubResource("SphereMesh_1hmtu")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=428754346]
+replication_config = SubResource("SceneReplicationConfig_635qg")
