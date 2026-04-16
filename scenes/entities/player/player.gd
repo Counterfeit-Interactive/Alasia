@@ -7,13 +7,23 @@ const FALL_VELOCITY = 1.5
 @onready var mesh: Node3D = $Mesh
 @onready var camera: Camera3D = $CameraController/Camera3D
 
+var nickname: String = ""
 var health = 5:
 	set(value):
 		health = value
 		if health <= 0:
 			get_tree().quit()
 
+
+func _enter_tree() -> void:
+	set_multiplayer_authority(name.to_int())
+	$CameraController.set_multiplayer_authority(name.to_int())
+
+	# Hide HUD
+
 func _physics_process(delta: float) -> void:
+	
+	if !is_multiplayer_authority(): return
 	if not is_on_floor():
 		velocity += get_gravity() * delta * FALL_VELOCITY
 

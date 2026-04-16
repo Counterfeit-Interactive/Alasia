@@ -7,10 +7,14 @@ const VERTICAL_ACC = 1.0
 const MOUSE_ACC = 0.002
 
 func _process(delta: float) -> void:
+	if !is_multiplayer_authority(): return
 	var joy_dir = Input.get_vector("pan_left","pan_right","pan_up","pan_down")
 	rotate_from_vector(joy_dir * delta * Vector2(HORIZONTAL_ACC, VERTICAL_ACC))
+	
+	$Camera3D.current = true
 
 func _input(event: InputEvent) -> void:
+	if !is_multiplayer_authority(): return
 	if event is InputEventMouseMotion:
 		rotate_from_vector(event.relative * MOUSE_ACC)
 

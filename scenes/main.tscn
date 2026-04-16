@@ -3,16 +3,18 @@
 [ext_resource type="Script" uid="uid://bnpgssfgiei4s" path="res://scenes/main.gd" id="1_ig7tw"]
 [ext_resource type="PackedScene" uid="uid://dkk8gj45natou" path="res://scenes/levels/test_level.tscn" id="2_0wfyh"]
 [ext_resource type="PackedScene" uid="uid://dlp61u7utr45p" path="res://scenes/entities/player/player.tscn" id="3_sugp2"]
-[ext_resource type="PackedScene" uid="uid://w20kcyyq5svx" path="res://scenes/entities/enemies/slime/slime.tscn" id="4_jyhfs"]
+[ext_resource type="Script" uid="uid://dadobn6d0raip" path="res://multiplayer_spawner.gd" id="3_tefeu"]
+[ext_resource type="PackedScene" uid="uid://memccy16nam6" path="res://scenes/menus/Lobby.tscn" id="5_o6xl0"]
+[ext_resource type="Script" uid="uid://cem0jh2qqkvj3" path="res://hud.gd" id="6_tipki"]
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_0wfyh"]
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_85g3d"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
 ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
 
 [sub_resource type="Sky" id="Sky_sugp2"]
-sky_material = SubResource("ProceduralSkyMaterial_0wfyh")
+sky_material = SubResource("ProceduralSkyMaterial_85g3d")
 
-[sub_resource type="Environment" id="Environment_jyhfs"]
+[sub_resource type="Environment" id="Environment_choun"]
 background_mode = 2
 sky = SubResource("Sky_sugp2")
 tonemap_mode = 2
@@ -21,17 +23,34 @@ glow_enabled = true
 [node name="Main" type="Node" unique_id=807531875]
 script = ExtResource("1_ig7tw")
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1349345994]
-environment = SubResource("Environment_jyhfs")
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=40444862]
+environment = SubResource("Environment_choun")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=940879021]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1287787631]
 transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 21.303856, 0)
 shadow_enabled = true
 
 [node name="TestLevel" parent="." unique_id=408472146 instance=ExtResource("2_0wfyh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.836916, 0)
 
-[node name="Player" parent="." unique_id=1476267170 instance=ExtResource("3_sugp2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8511121, 0)
+[node name="Entities" type="Node3D" parent="." unique_id=391449077]
 
-[node name="Slime" parent="." unique_id=2083691153 instance=ExtResource("4_jyhfs")]
-transform = Transform3D(-0.021011736, -0.0014804568, -0.99977815, -0.00061563106, 0.9999988, -0.0014678449, 0.99977905, 0.0005846524, -0.021012627, -1.069221, 0.9623189, -7.9041576)
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=1296724656]
+_spawnable_scenes = PackedStringArray("uid://dlp61u7utr45p")
+spawn_path = NodePath("../Entities")
+script = ExtResource("3_tefeu")
+network_player = ExtResource("3_sugp2")
+
+[node name="Lobby" parent="." unique_id=209315210 instance=ExtResource("5_o6xl0")]
+
+[node name="HUD" type="Control" parent="." unique_id=1875121623]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("6_tipki")
+
+[node name="Nickname" type="Label" parent="HUD" unique_id=1464144435]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
