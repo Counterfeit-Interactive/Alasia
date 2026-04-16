@@ -4,6 +4,11 @@
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_yfmsl"]
 
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_yfmsl"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+
 [node name="Enemy" type="CharacterBody3D" unique_id=2083691153]
 script = ExtResource("1_yfmsl")
 
@@ -15,3 +20,6 @@ collision_mask = 2
 [node name="CollisionShape3D" type="CollisionShape3D" parent="DetectionArea" unique_id=2121651088]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CylinderShape3D_yfmsl")
+
+[node name="EnemySynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=784367247]
+replication_config = SubResource("SceneReplicationConfig_yfmsl")

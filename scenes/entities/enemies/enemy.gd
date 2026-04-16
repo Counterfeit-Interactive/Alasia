@@ -25,6 +25,7 @@ func _ready() -> void:
 	detection_area_collision_shape.scale = Vector3(detection_radius, 1.0, detection_radius)
 
 func _process(_delta: float) -> void:
+	if !is_multiplayer_authority(): return
 	set_closest_target()
 
 func set_closest_target() -> void:
@@ -34,7 +35,7 @@ func set_closest_target() -> void:
 
 	var closest = overlapping_bodies[0]
 	for body in overlapping_bodies.slice(1):
-		if global_position.distance_squared_to(body) < global_position.distance_squared_to(closest):
+		if global_position.distance_squared_to(body.global_position) < global_position.distance_squared_to(closest.global_position):
 			closest = body
 	target = closest
 

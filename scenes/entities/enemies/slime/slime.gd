@@ -11,9 +11,10 @@ var direction: Vector3:
 		velocity.x = direction.x * speed
 		velocity.z = direction.z * speed
 	
-var mesh_angle: float = 0.0
+var mesh_angle: float = atan2(velocity.x,velocity.z)
 
 func _physics_process(delta: float) -> void:
+	if !is_multiplayer_authority(): return
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 	
@@ -28,7 +29,7 @@ func _physics_process(delta: float) -> void:
 			# Setup next jump and start timer
 			velocity.y = JUMP_VELOCITY
 			direction = get_direction()
-			mesh_angle = PI/2 + atan2(velocity.x,velocity.z)
+			mesh_angle = atan2(velocity.x,velocity.z)
 			jump_cooldown.start()
 
 	mesh.rotation.y = rotate_toward(mesh.rotation.y, mesh_angle, 5 * delta)
