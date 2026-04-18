@@ -1,6 +1,7 @@
 extends CharacterBody3D
+class_name Player
 
-const SPEED = 5.0
+const SPEED = 6.0
 const JUMP_VELOCITY = 6.5
 const FALL_VELOCITY = 1.5
 
@@ -12,7 +13,7 @@ var health = 5:
 	set(value):
 		health = value
 		if health <= 0:
-			get_tree().quit()
+			queue_free()
 
 
 func _enter_tree() -> void:

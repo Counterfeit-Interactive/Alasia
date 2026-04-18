@@ -23,6 +23,9 @@ func _physics_process(delta: float) -> void:
 		# Only move when jumping => when jump_cooldown is stopped
 		if move_and_slide() and not is_on_floor():
 			direction = Vector3(-direction.x, direction.y, -direction.z)
+			var collider = get_last_slide_collision().get_collider()
+			if collider is Player:
+				hit(collider)
 
 		# On floor == not jumping
 		if is_on_floor():

@@ -2,6 +2,7 @@ extends CharacterBody3D
 class_name Enemy
 
 @export var speed := 2.0
+@export var damage := 1
 @export var area_radius := 10.0 # The radius from the initial point the enemy roam in
 @export var detection_radius := 10.0 # The radius in which the enemy detect the player
 @export var chase_distance := 20.0 # The distance in which the enemy will chase the player
@@ -15,7 +16,7 @@ enum STATES { PASSIVE, AGRESSIVE, RETURN }
 var state: STATES:
 	set = set_state
 
-var target: CharacterBody3D
+var target: Player
 
 func _ready() -> void:
 	initial_position = global_position
@@ -36,6 +37,10 @@ func set_closest_target() -> CharacterBody3D:
 		if global_position.distance_squared_to(body.global_position) < global_position.distance_squared_to(closest.global_position):
 			closest = body
 	return closest
+
+@rpc("authority")
+func hit(player: Player) -> void:
+	player.health -= damage
 
 func get_state() -> STATES:
 	if state == STATES.RETURN:
