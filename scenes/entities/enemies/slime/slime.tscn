@@ -20,7 +20,6 @@ material = SubResource("StandardMaterial3D_2xo21")
 
 [node name="Slime" unique_id=2083691153 instance=ExtResource("1_2oqe7")]
 script = ExtResource("1_knqjk")
-speed = 2.0
 
 [node name="SlimeSynchronizer" type="MultiplayerSynchronizer" parent="." index="0" unique_id=1828036590]
 replication_config = SubResource("SceneReplicationConfig_2xo21")

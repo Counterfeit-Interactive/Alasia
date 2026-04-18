@@ -35,22 +35,23 @@ func _physics_process(delta: float) -> void:
 	mesh.rotation.y = rotate_toward(mesh.rotation.y, mesh_angle, 5 * delta)
 
 func get_direction() -> Vector3:
-	if (global_position.distance_to(initial_position) > area_radius):
-		target = null
+	if (state == STATES.PASSIVE and global_position.distance_to(initial_position) > area_radius) \
+		or state == STATES.RETURN:
 		return global_position.direction_to(initial_position)
 
 	if target:
 		return global_position.direction_to(target.global_position)
 
+
 	var rng = RandomNumberGenerator.new()
 	var vector = Vector3(rng.randf_range(-1.0, 1.0), 0, rng.randf_range(-1.0, 1.0))
 	return (transform.basis * vector).normalized()
 
-func _set_agressive(value: bool) -> void:
-	if not agressive and value:
-		speed = 5
-		jump_cooldown.wait_time = 0.5
-	elif agressive and not value:
+func set_state(value: STATES) -> void:
+	if value == STATES.PASSIVE:
 		speed = 2
 		jump_cooldown.wait_time = 1.0
+	else:
+		speed = 5
+		jump_cooldown.wait_time = 0.5
 	super(value)
