@@ -3,9 +3,9 @@ extends MultiplayerSpawner
 
 @export var network_player: PackedScene
 
-func _ready() -> void:
+func _init() -> void:
 	MultiplayerController.player_connected.connect(spawn_player)
-	pass
+	MultiplayerController.server_started.connect(server_started)
 	
 func spawn_player(id: int, player_info):
 	if !multiplayer.is_server(): return
@@ -13,4 +13,10 @@ func spawn_player(id: int, player_info):
 	player.name = str(id)
 	player.nickname = player_info["name"]
 	
+	MultiplayerController.player_spawn.rpc(id, player_info)
 	get_node(spawn_path).call_deferred("add_child", player)
+	
+
+#Spawn server player
+func server_started():
+	spawn_player(1, {"name":"Server"})

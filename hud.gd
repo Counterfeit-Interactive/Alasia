@@ -1,8 +1,13 @@
 extends Control
 
-func _ready():
-	MultiplayerController.player_is_ready.connect(setup)
 
-func setup(player_info):
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-	$Nickname.text = player_info["name"]
+
+
+func _process(_float):
+	var local_player:Player = Game.players.get_local()
+	
+	if local_player:
+		$VBoxContainer/HP.text = str(local_player.health)
+		$VBoxContainer/Nickname.text = local_player.nickname
+	
+	$VBoxContainer/OnlinePlayers.text = "Online Players" + str(len(Game.players.get_all()))

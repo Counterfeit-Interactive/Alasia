@@ -19,9 +19,10 @@ var health = 5:
 func _enter_tree() -> void:
 	set_multiplayer_authority(name.to_int())
 	$CameraController.set_multiplayer_authority(name.to_int())
-
-	# Hide HUD
-
+	
+	Game.players.add_player(multiplayer.get_unique_id(),name.to_int(), self)
+	Game.players.player_init(name.to_int())
+	
 func _physics_process(delta: float) -> void:
 	
 	if !is_multiplayer_authority(): return
@@ -43,3 +44,7 @@ func _physics_process(delta: float) -> void:
 		velocity.z = move_toward(velocity.z, 0, SPEED)
 
 	move_and_slide()
+
+
+func is_local_player() -> bool:
+	return multiplayer.get_unique_id() == int(name)
