@@ -31,7 +31,7 @@ func set_closest_target() -> CharacterBody3D:
 	var overlapping_bodies = detection_area.get_overlapping_bodies();
 	if not overlapping_bodies or state == STATES.RETURN:
 		return
-
+	
 	var closest = overlapping_bodies[0]
 	for body in overlapping_bodies.slice(1):
 		if global_position.distance_squared_to(body.global_position) < global_position.distance_squared_to(closest.global_position):
@@ -49,13 +49,13 @@ func get_state() -> STATES:
 		if global_position.distance_to(initial_position) < area_radius:
 			return STATES.PASSIVE
 		return STATES.RETURN
-
+	
 	if global_position.distance_to(initial_position) > chase_distance:
 		return STATES.RETURN
-
+	
 	if target:
 		return STATES.AGRESSIVE
-
+	
 	return STATES.PASSIVE
 
 func set_state(value: STATES) -> void:

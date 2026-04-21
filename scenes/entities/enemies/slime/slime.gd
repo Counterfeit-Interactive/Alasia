@@ -26,7 +26,7 @@ func _physics_process(delta: float) -> void:
 			var collider = get_last_slide_collision().get_collider()
 			if collider is Player:
 				hit(collider)
-
+		
 		# On floor == not jumping
 		if is_on_floor():
 			# Setup next jump and start timer
@@ -41,11 +41,10 @@ func get_direction() -> Vector3:
 	if (state == STATES.PASSIVE and global_position.distance_to(initial_position) > area_radius) \
 		or state == STATES.RETURN:
 		return global_position.direction_to(initial_position)
-
+	
 	if target:
 		return global_position.direction_to(target.global_position)
-
-
+	
 	var rng = RandomNumberGenerator.new()
 	var vector = Vector3(rng.randf_range(-1.0, 1.0), 0, rng.randf_range(-1.0, 1.0))
 	return (transform.basis * vector).normalized()

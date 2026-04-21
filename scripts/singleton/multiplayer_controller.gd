@@ -54,7 +54,7 @@ func _extract_player_name_from_args(args):
 	for arg in args:
 		if "--player" in arg:
 			return args[-1].split("=", true)[-1]
-			
+	
 	return "Unknown"
 
 func _create_client(selected_ip=DEFAULT_IP, selected_port=DEFAULT_PORT):
@@ -66,29 +66,24 @@ func _create_client(selected_ip=DEFAULT_IP, selected_port=DEFAULT_PORT):
 		return error
 	
 	multiplayer.multiplayer_peer = peer
-	
-	
-func _on_connected_ok():	
+
+func _on_connected_ok():
 	player_ready.rpc(player_info)
-	
 
 @rpc("any_peer")
 func player_ready(new_player_info):
 	player_info['health'] = 100
 	_register_player(new_player_info)
 
-	
 func _register_player(new_player_info):
 	var new_player_id = multiplayer.get_remote_sender_id()
 	player_connected.emit(new_player_id, new_player_info)
-
 
 @rpc("authority", "call_local")
 func _player_take_damage(peer_id:int, damage:int):
 	Game.players.get_by_id(peer_id).health -= damage
 	player_take_damage.emit(peer_id, Game.players.get_by_id(peer_id).health)
-	
-	
+
 @rpc("call_local", "authority")
 func player_spawn(peer_id:int, player_info):
 	Game.players._player_informations[peer_id] = player_info
