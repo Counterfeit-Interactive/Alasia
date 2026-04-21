@@ -1,0 +1,37 @@
+[gd_scene format=3 uid="uid://1cgb0sanvjx3"]
+
+[ext_resource type="Script" uid="uid://cem0jh2qqkvj3" path="res://scenes/entities/player/hud/hud.gd" id="1_82bhb"]
+
+[node name="HUD" type="Control" unique_id=1959095232]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_82bhb")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=557823293]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Health" type="HBoxContainer" parent="VBoxContainer" unique_id=1959824177]
+layout_mode = 2
+
+[node name="HealthPoints" type="Label" parent="VBoxContainer/Health" unique_id=126182637]
+layout_mode = 2
+
+[node name="HealthBar" type="ColorRect" parent="VBoxContainer/Health" unique_id=1034062220]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 0
+color = Color(1, 0, 0, 1)
+
+[node name="Nickname" type="Label" parent="VBoxContainer" unique_id=327459863]
+layout_mode = 2
+
+[node name="OnlinePlayers" type="Label" parent="VBoxContainer" unique_id=1492873320]
+layout_mode = 2
+text = "OnlinePlayers"
+
+[node name="Control" type="Control" parent="VBoxContainer" unique_id=1661599934]
+layout_mode = 2
