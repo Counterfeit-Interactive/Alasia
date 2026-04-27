@@ -5,7 +5,6 @@ const SPEED = 6.0
 const JUMP_VELOCITY = 6.5
 const FALL_VELOCITY = 1.5
 
-@onready var mesh: Node3D = $Mesh
 @onready var camera: Camera3D = $CameraController/Camera3D
 
 @onready var animation_tree:AnimationTree = $Character/AnimationTree
@@ -62,11 +61,10 @@ func _physics_process(delta: float) -> void:
 	var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	if direction:
 		var target_angle = PI/2 - input_dir.angle()
-		mesh.rotation.y = rotate_toward(mesh.rotation.y, target_angle, 20 * delta)
 		velocity.x = direction.x * SPEED
 		velocity.z = direction.z * SPEED
 		
-		player_node.rotation.y = rotate_toward(mesh.rotation.y, target_angle, 20 * delta)
+		player_node.rotation.y = rotate_toward(player_node.rotation.y, target_angle, 20 * delta)
 		is_running = true
 	else:
 		velocity.x = move_toward(velocity.x, 0, SPEED)
