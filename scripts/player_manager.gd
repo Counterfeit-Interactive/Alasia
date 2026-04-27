@@ -1,5 +1,6 @@
 class_name PlayerManager
 
+signal local_player_ready
 
 var _local:Player
 var players:Dictionary[int, Player] = {}
@@ -30,6 +31,8 @@ func add_player(local_player_id:int, peer_id:int, player:Player):
 	players[peer_id] = player
 	if local_player_id == peer_id:
 		_local = player
+
+		local_player_ready.emit()
 
 func _on_player_take_damage(peer_id, new_hp):
 	players[peer_id].health = new_hp

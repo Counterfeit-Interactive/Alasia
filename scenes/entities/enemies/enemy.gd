@@ -40,7 +40,6 @@ func set_closest_target() -> CharacterBody3D:
 
 @rpc("authority")
 func hit(player: Player) -> void:
-	#player.health -= damage
 	if multiplayer.is_server():
 		MultiplayerController._player_take_damage.rpc(int(player.name), damage)
 

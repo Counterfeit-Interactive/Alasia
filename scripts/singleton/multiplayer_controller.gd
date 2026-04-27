@@ -83,7 +83,20 @@ func _register_player(new_player_info):
 func _player_take_damage(peer_id:int, damage:int):
 	Game.players.get_by_id(peer_id).health -= damage
 	player_take_damage.emit(peer_id, Game.players.get_by_id(peer_id).health)
+	
+#@rpc("authority", "call_local")
+#func _entity_take_damage(entity_id:int, damage:int):
+	#Game.players.get_by_id(peer_id).health -= damage
+	#player_take_damage.emit(peer_id, Game.players.get_by_id(peer_id).health)
 
 @rpc("call_local", "authority")
 func player_spawn(peer_id:int, player_info):
 	Game.players._player_informations[peer_id] = player_info
+
+@rpc("any_peer", "call_local", "reliable")
+func player_attack():
+	var player_id = multiplayer.get_remote_sender_id()
+	#if multiplayer.is_server():
+		#Game.players.get_by_id(player_id).attack()
+	
+	Game.players.get_by_id(player_id).attack_animation()
