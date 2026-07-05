@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://tcq301re23nu"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_baucj"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+
+[node name="Item" type="RigidBody3D" unique_id=615027658]
+collision_layer = 8
+
+[node name="Area3D" type="Area3D" parent="." unique_id=1556560993]
+collision_mask = 4
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=850913321]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=628878236]
+
+[node name="ItemSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1184660922]
+replication_config = SubResource("SceneReplicationConfig_baucj")
+
+[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]

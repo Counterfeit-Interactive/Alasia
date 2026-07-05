@@ -8,6 +8,7 @@ signal player_is_ready(player_info)
 
 signal player_take_damage(peer_id, damage)
 
+signal item_dropped(item: Item, quantity: int)
 
 var peer:ENetMultiplayerPeer = null
 
@@ -87,3 +88,16 @@ func _player_take_damage(peer_id:int, damage:int):
 @rpc("call_local", "authority")
 func player_spawn(peer_id:int, player_info):
 	Game.players._player_informations[peer_id] = player_info
+
+@rpc("any_peer", "call_local")
+func remove_item(path: String):
+	if !multiplayer.is_server(): return
+	get_node(path).queue_free()
+
+@rpc("any_peer", "call_local")
+func drop_item(path: String, x: float, y: float, z: float, quantity: int):
+	var item = load(path).instantiate()
+	item.position.x = x
+	item.position.y = y
+	item.position.z = z
+	item_dropped.emit(item, quantity)

@@ -6,6 +6,8 @@ const HORIZONTAL_ACC = 3.0
 const VERTICAL_ACC = 1.0
 const MOUSE_ACC = 0.002
 
+var disabled = false
+
 func _process(delta: float) -> void:
 	if !is_multiplayer_authority(): return
 	var joy_dir = Input.get_vector("pan_left","pan_right","pan_up","pan_down")
@@ -15,7 +17,7 @@ func _process(delta: float) -> void:
 
 func _input(event: InputEvent) -> void:
 	if !is_multiplayer_authority(): return
-	if event is InputEventMouseMotion:
+	if not disabled and event is InputEventMouseMotion:
 		rotate_from_vector(event.relative * MOUSE_ACC)
 
 func rotate_from_vector(v: Vector2):

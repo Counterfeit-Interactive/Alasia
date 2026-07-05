@@ -8,13 +8,20 @@ const FALL_VELOCITY = 1.5
 @onready var mesh: Node3D = $Mesh
 @onready var camera: Camera3D = $CameraController/Camera3D
 
+var inventory_controller: PackedScene = load("res://scenes/entities/player/inventory_controller/inventory_controller.tscn")
+var inventory: InventoryController
+
 var nickname: String = ""
-var health = 5:
+var max_health = 10
+var health = max_health:
 	set(value):
-		health = value
+		if value > max_health:
+			health = max_health
+		else:
+			health = value
+
 		if health <= 0:
 			queue_free()
-
 
 func _enter_tree() -> void:
 	set_multiplayer_authority(name.to_int())
@@ -23,6 +30,25 @@ func _enter_tree() -> void:
 	Game.players.add_player(multiplayer.get_unique_id(),name.to_int(), self)
 	Game.players.player_init(name.to_int())
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
+func _ready() -> void:
+	if !is_multiplayer_authority(): return
+	inventory = inventory_controller.instantiate()
+	inventory.connect_consumable.connect(connect_consumable)
+	inventory.drop_item.connect(drop_item)
+	inventory.set_multiplayer_authority(name.to_int())
+	add_child(inventory)
+
+func _input(_event: InputEvent) -> void:
+	if !is_multiplayer_authority(): return
+
+	if Input.is_action_just_pressed("inventory"):
+		$CameraController.disabled = !$CameraController.disabled
+		inventory.inventory.visible = !inventory.inventory.visible
+		if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+			Input.mouse_mode = Input.MOUSE_MODE_CONFINED
+		else:
+			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 func _physics_process(delta: float) -> void:
 	if !is_multiplayer_authority(): return
@@ -45,6 +71,27 @@ func _physics_process(delta: float) -> void:
 	
 	move_and_slide()
 
-
 func is_local_player() -> bool:
 	return multiplayer.get_unique_id() == int(name)
+
+func loot(item: Item) -> bool:
+	if !is_multiplayer_authority(): return false
+	return inventory.add_item(item)
+
+func connect_consumable(consumable: Consumable) -> void:
+	if !is_multiplayer_authority(): return
+	consumable.consume_item.connect(func(callable: Callable): callable.call(self))
+
+func drop_item(slot: InventorySlot, quantity: int) -> void:
+	if !is_multiplayer_authority(): return
+	if not slot.item:
+		return
+	var drop_position = mesh.global_transform.origin + mesh.global_transform.basis.z*1.2
+	MultiplayerController.drop_item.rpc(
+		slot.item.scene_file_path,
+		drop_position.x,
+		drop_position.y + 5,
+		drop_position.z,
+		quantity
+	)
+	slot.quantity -= quantity
