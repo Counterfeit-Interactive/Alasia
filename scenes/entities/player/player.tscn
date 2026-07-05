@@ -32,9 +32,16 @@ properties/5/replication_mode = 1
 [sub_resource type="BoxShape3D" id="BoxShape3D_nh4ur"]
 
 [node name="Player" type="CharacterBody3D" unique_id=1476267170]
+collision_layer = 6
+collision_mask = 3
 script = ExtResource("1_1hmtu")
 
 [node name="HUD" parent="." unique_id=1959095232 instance=ExtResource("2_58kc7")]
+anchors_preset = -1
+anchor_right = 0.998
+anchor_bottom = 1.0
+offset_right = 0.4000244
+offset_bottom = -2.0
 
 [node name="CameraController" parent="." unique_id=1517576618 instance=ExtResource("2_635qg")]
 transform = Transform3D(1, 0, 0, 0, 0.49999994, 0.8660254, 0, -0.8660254, 0.49999994, 0, 4, 0)

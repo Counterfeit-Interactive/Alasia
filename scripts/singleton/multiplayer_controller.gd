@@ -1,19 +1,13 @@
 extends Node
 
 signal player_connected(peer_id, player_info)
-signal player_disconnected(peer_id)
-signal server_disconnected
 signal server_started
-signal player_is_ready(player_info)
-
-signal player_take_damage(peer_id, damage)
-signal entity_spawn(id)
-
 signal properties_changed(entity_id, properties)
 signal property_changed(entity_id, properties)
+signal item_dropped(item: Item, quantity: int)
 
-#Entity
-signal on_entity_attack(entity_id)
+
+var item_multiplayer_controller:ItemsMultiplayerController
 
 var peer:ENetMultiplayerPeer = null
 
@@ -29,6 +23,12 @@ var players_connected = 0
 var DEFAULT_PORT = 7000
 var DEFAULT_IP = "127.0.0.1"
 
+var inventory_multiplayer_controller:InventoryMultiplayerController
+var items_multiplayer_controller:ItemsMultiplayerController
+
+func _init() -> void:
+	items_multiplayer_controller = ItemsMultiplayerController.new()
+	add_child(items_multiplayer_controller)
 
 func _ready():
 	multiplayer.connected_to_server.connect(_on_connected_ok)
@@ -46,6 +46,10 @@ func _ready():
 	elif is_player:
 		player_info["name"] = _extract_player_name_from_args(args)
 		_create_client()
+	
+	
+	inventory_multiplayer_controller = InventoryMultiplayerController.new()
+	add_child(inventory_multiplayer_controller)
 		
 func _create_server(selected_port=DEFAULT_PORT):
 	var port = int(selected_port)
@@ -124,3 +128,12 @@ func ask_properties(peer_id:int):
 			share_properties.rpc_id(peer_id, entity.get_id(), entity.entities_properties)
 			
 # ---------------------- END SHARED SIDE ---------------------- #
+
+@rpc("any_peer", "call_local")
+func remove_item(path: String):
+	if !multiplayer.is_server(): return
+	get_node(path).queue_free()
+
+@rpc("any_peer", "call_local")
+func drop_item(unique_id:int):
+	pass

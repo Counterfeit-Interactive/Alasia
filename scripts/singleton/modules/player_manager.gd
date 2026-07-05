@@ -22,6 +22,7 @@ func get_all():	return players.values()
 func get_by_id(id:int):
 	if players.get(id):
 		return players[id]
+	return null
 
 func remove_player(player:Player):
 	players.erase(player.name)
@@ -31,3 +32,9 @@ func get_local():
 		return _local
 	
 	return null
+	
+func get_remote_player(multiplayer) -> Player:
+	var player_id = multiplayer.get_remote_sender_id()
+	var player:Player = Game.players.get_by_id(player_id)
+	
+	return player

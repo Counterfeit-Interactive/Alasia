@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://mmi24ishc15h" path="res://scripts/spawner/slime_spawner.gd" id="1_yautc"]
 [ext_resource type="PackedScene" uid="uid://w20kcyyq5svx" path="res://scenes/entities/enemies/slime/slime.tscn" id="2_fr1um"]
+[ext_resource type="Script" uid="uid://d33ugqgjkfywf" path="res://scripts/spawner/item_spawner.gd" id="3_fr1um"]
 
 [node name="TestLevel" type="Node3D" unique_id=408472146]
 
@@ -65,3 +66,9 @@ _spawnable_scenes = PackedStringArray("uid://w20kcyyq5svx")
 spawn_path = NodePath("../Slimes")
 script = ExtResource("1_yautc")
 slime = ExtResource("2_fr1um")
+
+[node name="Items" type="Node3D" parent="." unique_id=1853044217 groups=["ItemsContainer"]]
+
+[node name="ItemSpawner" type="MultiplayerSpawner" parent="." unique_id=906473440 groups=["ItemSpawner"]]
+spawn_path = NodePath("../Items")
+script = ExtResource("3_fr1um")

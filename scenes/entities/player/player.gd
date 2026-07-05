@@ -6,21 +6,24 @@ const JUMP_VELOCITY = 6.5
 const FALL_VELOCITY = 1.5
 
 @onready var camera: Camera3D = $CameraController/Camera3D
-
-@onready var animation_tree:AnimationTree = $Character/AnimationTree
+@onready var animation_tree: AnimationTree = $Character/AnimationTree
 @onready var state_machine = $Character/AnimationTree.get("parameters/Player/playback")
+@onready var player_node: Node3D = $Character
+@export var is_jumping: bool = false
+@export var is_running: bool = false
+@export var is_attacking: bool = false
+@export var unique_id: int = -1
 
-@onready var player_node:Node3D = $Character
+var inventory_controller: PackedScene = load("res://scenes/entities/player/inventory_controller/inventory_controller.tscn")
+var inventory_manager:InventoryManager
 
-@export var is_jumping:bool = false
-@export var is_running:bool = false
-@export var is_attacking:bool = false
 
-var entity:Entity = Entity.new()
+var inventory: InventoryController
+var entity: Entity = Entity.new()
 var nickname: String = ""
-var is_alive:bool = true
+var is_alive: bool = true
+var max_health: int = 100
 
-@export var unique_id:int = -1
 
 func _enter_tree() -> void:
 	entity.entity_ready.connect(init_player)
@@ -32,13 +35,36 @@ func on_authority_change():
 		$CameraController.set_multiplayer_authority(entity.get_authority())
 
 func init_player():
+	inventory_manager = InventoryManager.new(self)
 	if entity.get_authority() == multiplayer.get_unique_id():
+		
 		Game.players._local = self
+		inventory = inventory_controller.instantiate()
+		inventory.set_player(self)
+		inventory.connect_consumable.connect(connect_consumable)
+		inventory.drop_item.connect(drop_item)
+		inventory.set_multiplayer_authority(multiplayer.get_unique_id())
+		inventory_manager.inventory_updated.connect(inventory.inventory_updated)
+
+		add_child(inventory)
 	if multiplayer.is_server():
-		entity.set_health(100)
+		entity.set_health(max_health)
+	
 
 func _ready():
 	animation_tree.connect("animation_finished", _animation_finished)
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
+func _input(_event: InputEvent) -> void:
+	if !is_multiplayer_authority(): return
+
+	if Input.is_action_just_pressed("inventory"):
+		$CameraController.disabled = !$CameraController.disabled
+		inventory.inventory.visible = !inventory.inventory.visible
+		if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+			Input.mouse_mode = Input.MOUSE_MODE_CONFINED
+		else:
+			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 func _physics_process(delta: float) -> void:
 	
@@ -117,3 +143,22 @@ func _on_hit_box_body_entered(body: Node3D) -> void:
 func _on_hit_box_area_entered(area: Area3D) -> void:
 	var parent = area.get_parent_node_3d()
 	parent.entity.take_damage(10)
+
+func loot(item: Item, amount:int=1) -> void:
+	if not Game.is_server():
+		return
+	inventory_manager.add_item(item, amount)
+	MultiplayerController.inventory_multiplayer_controller.loot_item.rpc(self.multiplayer.get_unique_id(), item.item_name)
+	#if !is_multiplayer_authority(): return false
+
+func connect_consumable(inventory_slot_id:int) -> void:
+	if !is_multiplayer_authority(): return
+	#consumable.consume_item.connect(func(callable: Callable): callable.call(self))
+	MultiplayerController.inventory_multiplayer_controller.on_player_use.rpc(inventory_slot_id)
+
+func drop_item(slot: InventorySlot, quantity: int) -> void:
+	if !is_multiplayer_authority(): return
+	if not slot.inventory_item:
+		return
+	
+	MultiplayerController.inventory_multiplayer_controller.drop_item.rpc(slot.inventory_item.unique_id)
