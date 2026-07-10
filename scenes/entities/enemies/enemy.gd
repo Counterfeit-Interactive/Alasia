@@ -17,10 +17,14 @@ var state: STATES:
 	set = set_state
 
 var target: Player
+var entity:Entity = Entity.new()
+var unique_id:int
 
 func _ready() -> void:
 	initial_position = global_position
 	detection_area_collision_shape.scale = Vector3(detection_radius, 1.0, detection_radius)
+	entity.init(multiplayer, self)
+	Game.entities.add_entity(entity)
 
 func _process(_delta: float) -> void:
 	if !is_multiplayer_authority(): return
@@ -40,8 +44,7 @@ func set_closest_target() -> CharacterBody3D:
 
 @rpc("authority")
 func hit(player: Player) -> void:
-	if multiplayer.is_server():
-		MultiplayerController._player_take_damage.rpc(int(player.name), damage)
+	player.entity.take_damage(damage)
 
 func get_state() -> STATES:
 	if state == STATES.RETURN:

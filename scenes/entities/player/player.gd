@@ -16,31 +16,44 @@ const FALL_VELOCITY = 1.5
 @export var is_running:bool = false
 @export var is_attacking:bool = false
 
+var entity:Entity = Entity.new()
 var nickname: String = ""
-
 var is_alive:bool = true
+
+@export var unique_id:int = -1
+
 var health = 5:
 	set(value):
 		health = value
 		if health <= 0:
-			#queue_free()
 			is_alive = false
 
-
 func _enter_tree() -> void:
-	set_multiplayer_authority(name.to_int())
-	$CameraController.set_multiplayer_authority(name.to_int())
+	entity.init(multiplayer, self)
 	
-	Game.players.add_player(multiplayer.get_unique_id(),name.to_int(), self)
-	Game.players.player_init(name.to_int())
-	#Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-	
+func on_authority_change():
+	if entity.get_authority(): 
+		set_multiplayer_authority(entity.get_authority())
+		$CameraController.set_multiplayer_authority(entity.get_authority())
+		
+
+func init_player():
+	if entity.get_authority() == multiplayer.get_unique_id():
+		Game.players._local = self
+	entity.setProperty("health", 100)
+
 func _ready():
 	animation_tree.connect("animation_finished", _animation_finished)
+	if multiplayer.is_server():
+		call_deferred("init_player")
 
 func _physics_process(delta: float) -> void:
+	if get_multiplayer_authority() != entity.get_authority():
+		on_authority_change()
+	
 	_update_animation_tree()
-	if !is_multiplayer_authority(): return
+	if !is_multiplayer_authority():
+		return
 	
 	$HitBox/CollisionShape3D.disabled = !animation_tree.enable_hitbox
 	

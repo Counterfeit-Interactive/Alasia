@@ -7,7 +7,16 @@ signal server_started
 signal player_is_ready(player_info)
 
 signal player_take_damage(peer_id, damage)
+signal entity_spawn(id)
 
+signal properties_changed(entity_id, properties)
+signal property_changed(entity_id, properties)
+
+#Entity
+signal on_entity_attack(entity_id)
+
+
+signal entity_take_damage(entity_id, damage)
 
 var peer:ENetMultiplayerPeer = null
 
@@ -56,6 +65,10 @@ func _extract_player_name_from_args(args):
 			return args[-1].split("=", true)[-1]
 	
 	return "Unknown"
+	
+func _register_player(new_player_info):
+	var new_player_id = multiplayer.get_remote_sender_id()
+	player_connected.emit(new_player_id, new_player_info)
 
 func _create_client(selected_ip=DEFAULT_IP, selected_port=DEFAULT_PORT):
 	var ip = selected_ip
@@ -70,33 +83,52 @@ func _create_client(selected_ip=DEFAULT_IP, selected_port=DEFAULT_PORT):
 func _on_connected_ok():
 	player_ready.rpc(player_info)
 
+# ---------------------- SERVER SIDE ---------------------- #
+@rpc("call_local", "authority")
+func share_properties(entity_id:int, properties):
+	properties_changed.emit(entity_id, properties)
+
+#Server side
+@rpc("call_local", "authority")
+func share_property(entity_id:int, name:String, value):
+	property_changed.emit(entity_id, name, value)
+
+#Server side
+@rpc("call_local", "authority")
+func player_spawn(peer_id:int, entity_id:int):
+	#Game.players._player_informations[peer_id] = player_info
+	print(entity_id, multiplayer.is_server())
+	
+@rpc("call_local", "authority")
+func _entity_take_damage(entity_id:int, damage:int):
+	entity_take_damage.emit(entity_id, damage)
+	
+# ---------------------- END SERVER SIDE -------------------- #
+
+# ---------------------- SHARED SIDE ------------------------ #
 @rpc("any_peer")
 func player_ready(new_player_info):
 	player_info['health'] = 100
 	_register_player(new_player_info)
 
-func _register_player(new_player_info):
-	var new_player_id = multiplayer.get_remote_sender_id()
-	player_connected.emit(new_player_id, new_player_info)
-
-@rpc("authority", "call_local")
-func _player_take_damage(peer_id:int, damage:int):
-	Game.players.get_by_id(peer_id).health -= damage
-	player_take_damage.emit(peer_id, Game.players.get_by_id(peer_id).health)
-	
-#@rpc("authority", "call_local")
-#func _entity_take_damage(entity_id:int, damage:int):
-	#Game.players.get_by_id(peer_id).health -= damage
-	#player_take_damage.emit(peer_id, Game.players.get_by_id(peer_id).health)
-
-@rpc("call_local", "authority")
-func player_spawn(peer_id:int, player_info):
-	Game.players._player_informations[peer_id] = player_info
-
 @rpc("any_peer", "call_local", "reliable")
 func player_attack():
 	var player_id = multiplayer.get_remote_sender_id()
-	#if multiplayer.is_server():
-		#Game.players.get_by_id(player_id).attack()
-	
-	Game.players.get_by_id(player_id).attack_animation()
+	var player = Game.players.get_by_id(player_id)
+	entity_attack(player.entity.get_id())
+
+# Common function to play animation for an entity that attacked
+@rpc("any_peer", "call_local", "reliable")
+func entity_attack(entity_id):
+	Game.entities.get_by_id(entity_id).object.attack_animation()
+
+## It's usefull when we want to synchronize all data of an entity (like for the initial player spawn)
+@rpc("any_peer", "reliable")
+func ask_properties(peer_id:int):
+	if multiplayer.is_server():
+		for entity in Game.entities.get_all():
+			if entity is Player:
+				entity.object.on_authority_change()
+			share_properties.rpc_id(peer_id, entity.get_id(), entity.entities_properties)
+			
+# ---------------------- END SHARED SIDE ---------------------- #

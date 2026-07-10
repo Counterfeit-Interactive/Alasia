@@ -33,5 +33,13 @@ layout_mode = 2
 layout_mode = 2
 text = "OnlinePlayers"
 
-[node name="Control" type="Control" parent="VBoxContainer" unique_id=1661599934]
+[node name="ID" type="Label" parent="VBoxContainer" unique_id=1950274577]
+layout_mode = 2
+text = "ID"
+
+[node name="Label" type="Label" parent="VBoxContainer" unique_id=476600473]
+layout_mode = 2
+text = "Players"
+
+[node name="PlayersList" type="VBoxContainer" parent="VBoxContainer" unique_id=4519046]
 layout_mode = 2
