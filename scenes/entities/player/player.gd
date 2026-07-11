@@ -29,6 +29,7 @@ var health = 5:
 			is_alive = false
 
 func _enter_tree() -> void:
+	entity.entity_ready.connect(init_player)
 	entity.init(multiplayer, self)
 	
 func on_authority_change():
@@ -37,15 +38,24 @@ func on_authority_change():
 		$CameraController.set_multiplayer_authority(entity.get_authority())
 		
 
+#func init_player():
+	#if entity.get_authority() == multiplayer.get_unique_id():
+		#Game.players._local = self
+	#entity.setProperty("health", 100)
+	#print("ready")
+	
 func init_player():
 	if entity.get_authority() == multiplayer.get_unique_id():
 		Game.players._local = self
-	entity.setProperty("health", 100)
+	if multiplayer.is_server():
+		entity.set_health(100)
+		print(entity.get_health(), multiplayer.is_server())
+		print("ready2", multiplayer.is_server())
 
 func _ready():
 	animation_tree.connect("animation_finished", _animation_finished)
-	if multiplayer.is_server():
-		call_deferred("init_player")
+	#if multiplayer.is_server():
+		#call_deferred("init_player")
 
 func _physics_process(delta: float) -> void:
 	if get_multiplayer_authority() != entity.get_authority():

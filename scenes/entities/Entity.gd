@@ -1,17 +1,13 @@
 class_name Entity
 
+signal entity_ready
 
 var multiplayer:MultiplayerAPI
 var unique_id:int = -1
-var health = 100:
-	set(value):
-		health = value
-		#if health <= 0:
-			##queue_free()
-			#is_alive = false
 
 var object:Node
 var entities_properties = {}
+var _ready:bool = false
 
 func init(_multiplayer:MultiplayerAPI, _object:Node):
 	multiplayer = _multiplayer
@@ -24,10 +20,19 @@ func init(_multiplayer:MultiplayerAPI, _object:Node):
 		MultiplayerController.ask_properties.rpc(multiplayer.get_unique_id())
 	
 	Game.entities.add_entity(self)
+	if multiplayer.is_server():
+		call_deferred("on_ready")
 
 func on_ready():
+	if _ready:
+		return
+
 	if object is Player:
 		Game.players.add_player(multiplayer.get_unique_id(), object.entity.get_authority(), object)
+	
+	_ready = true
+	# Allow us to connect method after everything is ok
+	entity_ready.emit()
 
 func setProperty(name:String, value):
 	if name in entities_properties and entities_properties[name] == value:
@@ -63,6 +68,12 @@ func is_player() -> bool:
 func get_id():
 	return unique_id
 	
+func get_health() -> int:
+	return getProperty("health") if getProperty("health") else 0
+	
+func set_health(value:int):
+	setProperty("health", value)
+	
 func get_name():
 	var name = getProperty("name") 
 	return name if name else "Invalid"
@@ -71,8 +82,7 @@ func set_name(new_name: String):
 	entities_properties["name"] = new_name
 
 func take_damage(damage:int):
-	var current_health = getProperty("health")
-	print(current_health)
+	var current_health = get_health()
 	setProperty("health", current_health - damage)
 
 func get_object():

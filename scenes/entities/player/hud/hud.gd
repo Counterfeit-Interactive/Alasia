@@ -9,8 +9,8 @@ extends Control
 func _process(_float):
 	var local_player:Player = Game.players.get_local()
 	if local_player:
-		health_points.text = str(local_player.entity.getProperty("health"))
-		health_bar.custom_minimum_size.x = local_player.entity.getProperty("health") * health_bar.custom_minimum_size.y
+		health_points.text = str(local_player.entity.get_health())
+		health_bar.custom_minimum_size.x = local_player.entity.get_health() * health_bar.custom_minimum_size.y
 		nickname.text = local_player.nickname + "server : " + str(multiplayer.is_server())
 		unique_id.text = str(local_player.entity.get_name() )
 	

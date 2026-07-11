@@ -30,4 +30,6 @@ func update_properties(entity_id, properties):
 
 ## Emitted when server send rpc_id with property that changed
 func update_property(entity_id, name, value):
+	var entity = Game.entities.get_by_id(entity_id)
 	Game.entities.get_by_id(entity_id).setProperty(name, value)
+	print(name, value)

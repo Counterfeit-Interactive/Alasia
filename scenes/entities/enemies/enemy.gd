@@ -24,7 +24,7 @@ func _ready() -> void:
 	initial_position = global_position
 	detection_area_collision_shape.scale = Vector3(detection_radius, 1.0, detection_radius)
 	entity.init(multiplayer, self)
-	Game.entities.add_entity(entity)
+	#Game.entities.add_entity(entity)
 
 func _process(_delta: float) -> void:
 	if !is_multiplayer_authority(): return
