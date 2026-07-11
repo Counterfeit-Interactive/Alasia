@@ -3,29 +3,35 @@
 [ext_resource type="Script" uid="uid://bx3pqbd6vevj8" path="res://scenes/entities/player/player.gd" id="1_1hmtu"]
 [ext_resource type="PackedScene" uid="uid://1cgb0sanvjx3" path="res://scenes/entities/player/hud/hud.tscn" id="2_58kc7"]
 [ext_resource type="PackedScene" uid="uid://cjk54xxknnc2h" path="res://scenes/entities/player/camera_controller/camera_controller.tscn" id="2_635qg"]
+[ext_resource type="PackedScene" uid="uid://cq78cyb6qm6h2" path="res://assets/knight.tscn" id="4_nh4ur"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_635qg"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_yel1f"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_635qg"]
-albedo_color = Color(0.75076944, 0.13129711, 0.22808671, 1)
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_1hmtu"]
-material = SubResource("StandardMaterial3D_635qg")
-
-[sub_resource type="SphereMesh" id="SphereMesh_1hmtu"]
-
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_635qg"]
 properties/0/path = NodePath(".:position")
 properties/0/spawn = true
 properties/0/replication_mode = 1
-properties/1/path = NodePath("Mesh:rotation")
+properties/1/path = NodePath(".:is_jumping")
 properties/1/spawn = true
-properties/1/replication_mode = 1
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:is_running")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:is_attacking")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+properties/4/path = NodePath("Character:rotation")
+properties/4/spawn = true
+properties/4/replication_mode = 1
+properties/5/path = NodePath(".:unique_id")
+properties/5/spawn = false
+properties/5/replication_mode = 1
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_nh4ur"]
 
 [node name="Player" type="CharacterBody3D" unique_id=1476267170]
-collision_layer = 3
 script = ExtResource("1_1hmtu")
 
 [node name="HUD" parent="." unique_id=1959095232 instance=ExtResource("2_58kc7")]
@@ -38,18 +44,19 @@ spring_length = 9.0
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1425894056]
 shape = SubResource("CapsuleShape3D_yel1f")
 
-[node name="Mesh" type="Node3D" parent="." unique_id=534043013]
-
-[node name="Body" type="MeshInstance3D" parent="Mesh" unique_id=1185569891]
-mesh = SubResource("CapsuleMesh_1hmtu")
-
-[node name="Eye1" type="MeshInstance3D" parent="Mesh" unique_id=1506930710]
-transform = Transform3D(0.28408045, 0, 0, 0, 0.28408045, 0, 0, 0, 0.28408045, -0.23112418, 0.465, 0.45719352)
-mesh = SubResource("SphereMesh_1hmtu")
-
-[node name="Eye2" type="MeshInstance3D" parent="Mesh" unique_id=1874650018]
-transform = Transform3D(0.28408045, 0, 0, 0, 0.28408045, 0, 0, 0, 0.28408045, 0.231, 0.465, 0.45699874)
-mesh = SubResource("SphereMesh_1hmtu")
-
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=428754346]
 replication_config = SubResource("SceneReplicationConfig_635qg")
+
+[node name="Character" parent="." unique_id=438379325 instance=ExtResource("4_nh4ur")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, -1, 0)
+
+[node name="HitBox" type="Area3D" parent="." unique_id=211045235]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.3494327)
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HitBox" unique_id=969039550]
+shape = SubResource("BoxShape3D_nh4ur")
+disabled = true
+
+[connection signal="area_entered" from="HitBox" to="." method="_on_hit_box_area_entered"]
