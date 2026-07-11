@@ -32,4 +32,3 @@ func update_properties(entity_id, properties):
 func update_property(entity_id, name, value):
 	var entity = Game.entities.get_by_id(entity_id)
 	Game.entities.get_by_id(entity_id).setProperty(name, value)
-	print(name, value)

@@ -82,6 +82,8 @@ func set_name(new_name: String):
 	entities_properties["name"] = new_name
 
 func take_damage(damage:int):
+	if not multiplayer.is_server():
+		return
 	var current_health = get_health()
 	setProperty("health", current_health - damage)
 

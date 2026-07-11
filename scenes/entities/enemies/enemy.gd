@@ -20,13 +20,20 @@ var target: Player
 var entity:Entity = Entity.new()
 var unique_id:int
 
+func _enter_tree() -> void:
+	entity.entity_ready.connect(init_entity)
+
+func init_entity():
+	if multiplayer.is_server():
+		entity.set_health(100)
+
 func _ready() -> void:
 	initial_position = global_position
 	detection_area_collision_shape.scale = Vector3(detection_radius, 1.0, detection_radius)
 	entity.init(multiplayer, self)
-	#Game.entities.add_entity(entity)
 
 func _process(_delta: float) -> void:
+	$SubViewport/Health3d.value = entity.get_health()
 	if !is_multiplayer_authority(): return
 	target = set_closest_target()
 	state = get_state()

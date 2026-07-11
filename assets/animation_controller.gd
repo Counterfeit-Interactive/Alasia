@@ -30,6 +30,5 @@ func handle_animation(delta):
 	
 	update_tree()
 func update_tree():
-	print(run_val)
 	anim_tree["parameters/Run/blend_amount"] = run_val
 	anim_tree["parameters/Jump/blend_amount"] = jump_val

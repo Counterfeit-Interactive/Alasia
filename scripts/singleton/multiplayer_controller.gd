@@ -15,9 +15,6 @@ signal property_changed(entity_id, properties)
 #Entity
 signal on_entity_attack(entity_id)
 
-
-signal entity_take_damage(entity_id, damage)
-
 var peer:ENetMultiplayerPeer = null
 
 var is_server = false
@@ -90,25 +87,20 @@ func share_properties(entity_id:int, properties):
 
 #Server side
 @rpc("call_local", "authority")
-func share_property(entity_id:int, name:String, value):
+func share_property(entity_id:int, name: String, value):
 	property_changed.emit(entity_id, name, value)
 
 #Server side
 @rpc("call_local", "authority")
 func player_spawn(peer_id:int, entity_id:int):
 	#Game.players._player_informations[peer_id] = player_info
-	print(entity_id, multiplayer.is_server())
-	
-@rpc("call_local", "authority")
-func _entity_take_damage(entity_id:int, damage:int):
-	entity_take_damage.emit(entity_id, damage)
+	pass
 	
 # ---------------------- END SERVER SIDE -------------------- #
 
 # ---------------------- SHARED SIDE ------------------------ #
 @rpc("any_peer")
 func player_ready(new_player_info):
-	player_info['health'] = 100
 	_register_player(new_player_info)
 
 @rpc("any_peer", "call_local", "reliable")

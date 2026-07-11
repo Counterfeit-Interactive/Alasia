@@ -22,12 +22,6 @@ var is_alive:bool = true
 
 @export var unique_id:int = -1
 
-var health = 5:
-	set(value):
-		health = value
-		if health <= 0:
-			is_alive = false
-
 func _enter_tree() -> void:
 	entity.entity_ready.connect(init_player)
 	entity.init(multiplayer, self)
@@ -36,28 +30,21 @@ func on_authority_change():
 	if entity.get_authority(): 
 		set_multiplayer_authority(entity.get_authority())
 		$CameraController.set_multiplayer_authority(entity.get_authority())
-		
 
-#func init_player():
-	#if entity.get_authority() == multiplayer.get_unique_id():
-		#Game.players._local = self
-	#entity.setProperty("health", 100)
-	#print("ready")
-	
 func init_player():
 	if entity.get_authority() == multiplayer.get_unique_id():
 		Game.players._local = self
 	if multiplayer.is_server():
 		entity.set_health(100)
-		print(entity.get_health(), multiplayer.is_server())
-		print("ready2", multiplayer.is_server())
 
 func _ready():
 	animation_tree.connect("animation_finished", _animation_finished)
-	#if multiplayer.is_server():
-		#call_deferred("init_player")
 
 func _physics_process(delta: float) -> void:
+	
+	# The server need to check the hitbox for updating health
+	$HitBox/CollisionShape3D.disabled = !animation_tree.enable_hitbox
+	
 	if get_multiplayer_authority() != entity.get_authority():
 		on_authority_change()
 	
@@ -65,7 +52,6 @@ func _physics_process(delta: float) -> void:
 	if !is_multiplayer_authority():
 		return
 	
-	$HitBox/CollisionShape3D.disabled = !animation_tree.enable_hitbox
 	
 	if not is_on_floor():
 		velocity += get_gravity() * delta * FALL_VELOCITY
@@ -109,6 +95,7 @@ func attack_animation():
 	is_attacking = true
 	state_machine.travel("Attack")
 	
+	
 func _animation_finished(anim_name):
 	if anim_name == "Player/Melee_1H_Attack_Slice_Horizontal":
 		is_attacking = false
@@ -125,4 +112,8 @@ func is_local_player() -> bool:
 	
 func _on_hit_box_body_entered(body: Node3D) -> void:
 	if multiplayer.is_server():
-		print(body)
+		print("test", body)
+
+func _on_hit_box_area_entered(area: Area3D) -> void:
+	var parent = area.get_parent_node_3d()
+	parent.entity.take_damage(10)

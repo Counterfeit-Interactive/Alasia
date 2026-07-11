@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://rdusje8xkkmw"]
 
 [ext_resource type="Script" uid="uid://bcek3i8hoovap" path="res://scenes/entities/enemies/enemy.gd" id="1_yfmsl"]
+[ext_resource type="PackedScene" uid="uid://da1yaa76ley1n" path="res://scenes/hud/health3d.tscn" id="2_essrt"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_yfmsl"]
 
@@ -11,6 +12,9 @@ properties/0/replication_mode = 1
 properties/1/path = NodePath("Mesh:rotation")
 properties/1/spawn = true
 properties/1/replication_mode = 1
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_essrt"]
+viewport_path = NodePath("SubViewport")
 
 [node name="Enemy" type="CharacterBody3D" unique_id=2083691153]
 script = ExtResource("1_yfmsl")
@@ -26,3 +30,14 @@ shape = SubResource("CylinderShape3D_yfmsl")
 
 [node name="EnemySynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=784367247]
 replication_config = SubResource("SceneReplicationConfig_yfmsl")
+
+[node name="SubViewport" type="SubViewport" parent="." unique_id=928168099]
+disable_3d = true
+transparent_bg = true
+
+[node name="Health3d" parent="SubViewport" unique_id=299951857 instance=ExtResource("2_essrt")]
+
+[node name="Sprite3D" type="Sprite3D" parent="." unique_id=1852382945]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.007314086, 1.0138669, 0.03403306)
+billboard = 1
+texture = SubResource("ViewportTexture_essrt")
