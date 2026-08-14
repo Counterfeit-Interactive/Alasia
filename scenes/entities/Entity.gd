@@ -70,8 +70,14 @@ func get_id():
 func get_health() -> int:
 	return get_property("health") if get_property("health") else 0
 	
+func get_max_health() -> int:
+	return get_property("max_health") if get_property("max_health") else 0
+	
 func set_health(value:int):
 	set_property("health", value)
+	
+func set_max_health(value:int):
+	set_property("max_health", value)
 	
 func get_name():
 	var name = get_property("name") 

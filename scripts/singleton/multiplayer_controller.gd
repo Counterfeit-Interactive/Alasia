@@ -7,7 +7,6 @@ signal property_changed(entity_id, properties)
 signal item_dropped(item: Item, quantity: int)
 
 
-var item_multiplayer_controller:ItemsMultiplayerController
 
 var peer:ENetMultiplayerPeer = null
 
@@ -23,12 +22,17 @@ var players_connected = 0
 var DEFAULT_PORT = 7000
 var DEFAULT_IP = "127.0.0.1"
 
+
+var item_multiplayer_controller:ItemsMultiplayerController
+var interaction_multiplayer_controller:InteractionMultiplayerController
 var inventory_multiplayer_controller:InventoryMultiplayerController
 var items_multiplayer_controller:ItemsMultiplayerController
 
 func _init() -> void:
 	items_multiplayer_controller = ItemsMultiplayerController.new()
+	interaction_multiplayer_controller = InteractionMultiplayerController.new()
 	add_child(items_multiplayer_controller)
+	add_child(interaction_multiplayer_controller)
 
 func _ready():
 	multiplayer.connected_to_server.connect(_on_connected_ok)

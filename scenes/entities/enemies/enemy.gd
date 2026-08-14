@@ -26,6 +26,7 @@ func _enter_tree() -> void:
 func init_entity():
 	if multiplayer.is_server():
 		entity.set_health(100)
+		entity.set_max_health(100)
 
 func _ready() -> void:
 	initial_position = global_position
