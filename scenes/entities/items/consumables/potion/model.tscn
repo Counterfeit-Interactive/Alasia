@@ -1,0 +1,50 @@
+[gd_scene format=3 uid="uid://ckf7aahyk7aad"]
+
+[ext_resource type="PackedScene" uid="uid://tcq301re23nu" path="res://scenes/entities/items/item.tscn" id="1_3h4r0"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_semnh"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_g4v7s"]
+albedo_color = Color(1, 0, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_yf5fn"]
+material = SubResource("StandardMaterial3D_g4v7s")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yf5fn"]
+albedo_color = Color(1, 0, 0, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_g4v7s"]
+material = SubResource("StandardMaterial3D_yf5fn")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hrx6g"]
+albedo_color = Color(0.5066083, 0.28401455, 0.097756974, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_yj62y"]
+material = SubResource("StandardMaterial3D_hrx6g")
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_baucj"]
+
+[node name="Potion" unique_id=376719334 instance=ExtResource("1_3h4r0")]
+
+[node name="CollisionShape3D" parent="Area3D" parent_id_path=PackedInt32Array(1556560993) index="0" unique_id=850913321]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 0, 0.0022845268, 0)
+shape = SubResource("SphereShape3D_semnh")
+
+[node name="Mesh" type="Node3D" parent="." index="1" unique_id=619798236]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 0, 0, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mesh" index="0" unique_id=97776678]
+transform = Transform3D(1, 0, 0, 0, 0.9927693, 0, 0, 0, 1, 0, 0.0022845268, 0)
+mesh = SubResource("SphereMesh_yf5fn")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Mesh" index="1" unique_id=432570643]
+transform = Transform3D(0.36899692, 0, 0, 0, 0.19485976, 0, 0, 0, 0.36899692, -0.0018137097, 0.6552769, 0)
+mesh = SubResource("CylinderMesh_g4v7s")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="Mesh" index="2" unique_id=314036320]
+transform = Transform3D(0.470431, 0, 0, 0, 0.083865866, 0, 0, 0, 0.470431, -0.0018137097, 0.9176047, 0)
+mesh = SubResource("CylinderMesh_yj62y")
+
+[node name="CollisionShape3D" parent="." index="2" unique_id=628878236]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 0, 0.0022845268, 0)
+shape = SubResource("SphereShape3D_baucj")

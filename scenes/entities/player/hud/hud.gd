@@ -22,5 +22,5 @@ func _process(_float):
 	for entity in Game.entities.get_all():
 		var label = Label.new()
 		if entity.is_player():
-			label.text = str(entity.get_id()) + " " + entity.get_name() +  " " + str(entity.getProperty("authority"))
+			label.text = str(entity.get_id()) + " " + entity.get_name() +  " " + str(entity.get_property("authority")) + " " + str(entity.get_health())
 			$VBoxContainer/PlayersList.add_child(label)

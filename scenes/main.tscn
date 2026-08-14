@@ -41,3 +41,5 @@ _spawnable_scenes = PackedStringArray("uid://dlp61u7utr45p")
 spawn_path = NodePath("../Players")
 script = ExtResource("3_tefeu")
 network_player = ExtResource("3_sugp2")
+
+[node name="Items" type="Node3D" parent="." unique_id=2012101450 groups=["ItemsContainer"]]

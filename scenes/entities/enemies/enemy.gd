@@ -2,7 +2,7 @@ extends CharacterBody3D
 class_name Enemy
 
 @export var speed := 2.0
-@export var damage := 1
+@export var damage := 10
 @export var area_radius := 10.0 # The radius from the initial point the enemy roam in
 @export var detection_radius := 10.0 # The radius in which the enemy detect the player
 @export var chase_distance := 20.0 # The distance in which the enemy will chase the player

@@ -6,6 +6,8 @@ const HORIZONTAL_ACC = 3.0
 const VERTICAL_ACC = 1.0
 const MOUSE_ACC = 0.002
 
+var disabled = false
+
 func _enter_tree() -> void:
 	Game.players.local_player_ready.connect(_init_camera)
 	Game.camera_controller = self
@@ -22,7 +24,7 @@ func _process(delta: float) -> void:
 
 func _input(event: InputEvent) -> void:
 	if !is_multiplayer_authority(): return
-	if event is InputEventMouseMotion:
+	if not disabled and event is InputEventMouseMotion:
 		rotate_from_vector(event.relative * MOUSE_ACC)
 
 func rotate_from_vector(v: Vector2):
