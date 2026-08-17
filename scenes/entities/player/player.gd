@@ -16,6 +16,7 @@ const FALL_VELOCITY = 1.5
 
 var inventory_controller: PackedScene = load("res://scenes/entities/player/inventory_controller/inventory_controller.tscn")
 var inventory_manager:InventoryManager
+var interaction_controller:InteractionController
 
 
 var inventory: InventoryController
@@ -24,10 +25,15 @@ var nickname: String = ""
 var is_alive: bool = true
 var max_health: int = 100
 
+#var dialogue:DialogueController
 
 func _enter_tree() -> void:
+	interaction_controller = InteractionController.new(self)
+	add_child(interaction_controller)
 	entity.entity_ready.connect(init_player)
 	entity.init(multiplayer, self)
+	
+	
 	
 func on_authority_change():
 	if entity.get_authority(): 
@@ -36,6 +42,7 @@ func on_authority_change():
 
 func init_player():
 	inventory_manager = InventoryManager.new(self)
+	
 	if entity.get_authority() == multiplayer.get_unique_id():
 		
 		Game.players._local = self
@@ -47,8 +54,10 @@ func init_player():
 		inventory_manager.inventory_updated.connect(inventory.inventory_updated)
 
 		add_child(inventory)
+
 	if multiplayer.is_server():
 		entity.set_health(max_health)
+		entity.set_max_health(max_health)
 	
 
 func _ready():
@@ -57,6 +66,11 @@ func _ready():
 
 func _input(_event: InputEvent) -> void:
 	if !is_multiplayer_authority(): return
+	
+	if Input.is_action_just_pressed("interact"):
+		$CameraController.disabled = true
+		var npc:NPC = interaction_controller.get_nearest_interaction()
+		UI.begin_dialogue(npc.get_dialogue())
 
 	if Input.is_action_just_pressed("inventory"):
 		$CameraController.disabled = !$CameraController.disabled
@@ -84,30 +98,31 @@ func _physics_process(delta: float) -> void:
 	else:
 		is_jumping = false
 
-	if Input.is_action_just_pressed("mouse_left"):
-		attack()
+	if self.get_can_move():
+		if Input.is_action_just_pressed("mouse_left"):
+			attack()
 
-	if Input.is_action_just_pressed("jump") and is_on_floor():
-		velocity.y = JUMP_VELOCITY
-		is_jumping = true
+		if Input.is_action_just_pressed("jump") and is_on_floor():
+			velocity.y = JUMP_VELOCITY
+			is_jumping = true
+			
 		
-	
-	var input_dir := Input.get_vector("left", "right", "forward", "backward").rotated(-camera.global_rotation.y)
-	var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-	if direction:
-		var target_angle = PI/2 - input_dir.angle()
-		velocity.x = direction.x * SPEED
-		velocity.z = direction.z * SPEED
+		var input_dir := Input.get_vector("left", "right", "forward", "backward").rotated(-camera.global_rotation.y)
+		var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+		if direction:
+			var target_angle = PI/2 - input_dir.angle()
+			velocity.x = direction.x * SPEED
+			velocity.z = direction.z * SPEED
+			
+			player_node.rotation.y = rotate_toward(player_node.rotation.y, target_angle, 20 * delta)
+			is_running = true
+		else:
+			velocity.x = move_toward(velocity.x, 0, SPEED)
+			velocity.z = move_toward(velocity.z, 0, SPEED)
+			
 		
-		player_node.rotation.y = rotate_toward(player_node.rotation.y, target_angle, 20 * delta)
-		is_running = true
-	else:
-		velocity.x = move_toward(velocity.x, 0, SPEED)
-		velocity.z = move_toward(velocity.z, 0, SPEED)
-		
-	
-	if velocity.x == 0 and velocity.z == 0:
-		is_running = false
+		if velocity.x == 0 and velocity.z == 0:
+			is_running = false
 		
 	
 	move_and_slide()
@@ -115,6 +130,14 @@ func _physics_process(delta: float) -> void:
 func attack():
 	if is_multiplayer_authority():
 		MultiplayerController.player_attack.rpc()
+		
+func set_can_move(can_move:bool):
+	entity.set_property("can_move", can_move)
+	
+func get_can_move() -> bool:
+	if entity.get_property("can_move") == null:
+		return true
+	return entity.get_property("can_move")
 	
 func attack_animation():
 	# It also enable collision box

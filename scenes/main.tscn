@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://dlp61u7utr45p" path="res://scenes/entities/player/player.tscn" id="3_sugp2"]
 [ext_resource type="Script" uid="uid://dadobn6d0raip" path="res://scripts/spawner/multiplayer_spawner.gd" id="3_tefeu"]
 [ext_resource type="PackedScene" uid="uid://memccy16nam6" path="res://scenes/menus/lobby/lobby.tscn" id="5_o6xl0"]
+[ext_resource type="PackedScene" uid="uid://cq603wgcprbcr" path="res://scenes/entities/npcs/merchant.tscn" id="6_tefeu"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_85g3d"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -41,5 +42,8 @@ _spawnable_scenes = PackedStringArray("uid://dlp61u7utr45p")
 spawn_path = NodePath("../Players")
 script = ExtResource("3_tefeu")
 network_player = ExtResource("3_sugp2")
+
+[node name="Merchant" parent="." unique_id=1931989908 instance=ExtResource("6_tefeu")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.232373, -3.974403, 0)
 
 [node name="Items" type="Node3D" parent="." unique_id=2012101450 groups=["ItemsContainer"]]

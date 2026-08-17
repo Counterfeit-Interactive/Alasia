@@ -7,16 +7,22 @@ const VERTICAL_ACC = 1.0
 const MOUSE_ACC = 0.002
 
 var disabled = false
+var player:Player
 
 func _enter_tree() -> void:
 	Game.players.local_player_ready.connect(_init_camera)
 	Game.camera_controller = self
+	
+	player = Game.players.get_local()
 
 func get_camera() -> Camera3D:
 	return $Camera3D
 
 func _process(delta: float) -> void:
 	if !is_multiplayer_authority(): return
+	if player and player.get_can_move():
+		return
+
 	var joy_dir = Input.get_vector("pan_left","pan_right","pan_up","pan_down")
 	rotate_from_vector(joy_dir * delta * Vector2(HORIZONTAL_ACC, VERTICAL_ACC))
 	
@@ -24,6 +30,9 @@ func _process(delta: float) -> void:
 
 func _input(event: InputEvent) -> void:
 	if !is_multiplayer_authority(): return
+	if player and not player.get_can_move():
+		return
+
 	if not disabled and event is InputEventMouseMotion:
 		rotate_from_vector(event.relative * MOUSE_ACC)
 

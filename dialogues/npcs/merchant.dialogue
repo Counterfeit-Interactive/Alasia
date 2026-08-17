@@ -1,0 +1,7 @@
+~ start
+Merchant: [[Hi|Hello|Howdy]], are you looking for a good item ?
+- Yes
+	Merchant: Nice, let's see my offers
+- No => END
+Merchant: For more information see the online documentation.
+=> END

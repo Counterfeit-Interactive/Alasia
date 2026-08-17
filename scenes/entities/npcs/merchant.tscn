@@ -1,0 +1,34 @@
+[gd_scene format=3 uid="uid://cq603wgcprbcr"]
+
+[ext_resource type="Script" uid="uid://caq2esd7qv0ln" path="res://scenes/entities/npcs/base/npc.gd" id="1_2v7h2"]
+[ext_resource type="Resource" uid="uid://dpax7dssah3gw" path="res://dialogues/npcs/merchant.dialogue" id="2_lwg2g"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_3nt24"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_70jdr"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_yjx0a"]
+radius = 8.292973
+
+[node name="Merchant" type="Node3D" unique_id=1931989908]
+script = ExtResource("1_2v7h2")
+dialogue_resource = ExtResource("2_lwg2g")
+metadata/_custom_type_script = "uid://caq2esd7qv0ln"
+
+[node name="RigidBody3D" type="RigidBody3D" parent="." unique_id=63962323]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9576704, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D" unique_id=1129579716]
+shape = SubResource("CapsuleShape3D_3nt24")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="RigidBody3D" unique_id=121708303]
+mesh = SubResource("CapsuleMesh_70jdr")
+
+[node name="DetectionArea" type="Area3D" parent="RigidBody3D" unique_id=1541558573]
+collision_layer = 0
+collision_mask = 4
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D/DetectionArea" unique_id=1042407019]
+shape = SubResource("SphereShape3D_yjx0a")
+
+[connection signal="body_shape_entered" from="RigidBody3D/DetectionArea" to="." method="_on_detection_area_body_shape_entered"]

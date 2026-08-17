@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://cht77bkho8s2f"]
+
+[ext_resource type="Script" uid="uid://caq2esd7qv0ln" path="res://scenes/entities/npcs/base/npc.gd" id="1_6fxjx"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_g4v7s"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_g4v7s"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_cm8b0"]
+radius = 8.292973
+
+[node name="Node3D" type="Node3D" unique_id=426587842]
+script = ExtResource("1_6fxjx")
+
+[node name="RigidBody3D" type="RigidBody3D" parent="." unique_id=1437169809]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9576704, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D" unique_id=1259299492]
+shape = SubResource("CapsuleShape3D_g4v7s")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="RigidBody3D" unique_id=1136629529]
+mesh = SubResource("CapsuleMesh_g4v7s")
+
+[node name="DetectionArea" type="Area3D" parent="RigidBody3D" unique_id=521158584]
+collision_layer = 0
+collision_mask = 4
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D/DetectionArea" unique_id=1602687999]
+shape = SubResource("SphereShape3D_cm8b0")
+
+[connection signal="area_entered" from="RigidBody3D/DetectionArea" to="." method="_on_detection_area_area_entered"]
+[connection signal="body_entered" from="RigidBody3D/DetectionArea" to="." method="_on_detection_area_body_entered"]
