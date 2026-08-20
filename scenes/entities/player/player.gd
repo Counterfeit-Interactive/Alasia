@@ -66,6 +66,7 @@ func _ready():
 
 func _input(_event: InputEvent) -> void:
 	if !is_multiplayer_authority(): return
+	if not entity.alive(): return
 	
 	if Input.is_action_just_pressed("interact"):
 		$CameraController.disabled = true
@@ -79,6 +80,7 @@ func _input(_event: InputEvent) -> void:
 			Input.mouse_mode = Input.MOUSE_MODE_CONFINED
 		else:
 			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
 
 func _physics_process(delta: float) -> void:
 	
@@ -98,7 +100,7 @@ func _physics_process(delta: float) -> void:
 	else:
 		is_jumping = false
 
-	if self.get_can_move():
+	if self.get_can_move() and entity.alive():
 		if Input.is_action_just_pressed("mouse_left"):
 			attack()
 
@@ -128,7 +130,7 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 
 func attack():
-	if is_multiplayer_authority():
+	if is_multiplayer_authority() and entity.alive():
 		MultiplayerController.player_attack.rpc()
 		
 func set_can_move(can_move:bool):
@@ -150,11 +152,13 @@ func _animation_finished(anim_name):
 		is_attacking = false
 
 func _update_animation_tree():
+	var died = entity.get_property("died")
 	animation_tree["parameters/Player/conditions/is_running"] = is_running && !is_jumping && !is_attacking
 	animation_tree["parameters/Player/conditions/is_jumping"] = is_jumping
 	animation_tree["parameters/Player/conditions/is_attacking"] = is_attacking
 
-	animation_tree["parameters/Player/conditions/idle"] = !is_running and !is_jumping and !is_attacking
+	animation_tree["parameters/Player/conditions/idle"] = !is_running and !is_jumping and !is_attacking and !died
+	animation_tree["parameters/Player/conditions/died"] = died
 	
 func is_local_player() -> bool:
 	return multiplayer.get_unique_id() == int(name)

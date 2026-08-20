@@ -17,6 +17,8 @@ func _physics_process(delta: float) -> void:
 	curAnim = RUN
 
 func handle_animation(delta):
+	run_val = 0
+	jump_val = 0
 	match curAnim:
 		IDLE:
 			run_val = lerpf(run_val, 0, blend_speed * delta)

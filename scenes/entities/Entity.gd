@@ -90,7 +90,15 @@ func take_damage(damage:int):
 	if not multiplayer.is_server():
 		return
 	var current_health = get_health()
-	set_property("health", current_health - damage)
+	var new_health = current_health - damage
+	if new_health <= 0:
+		new_health = 0
+		set_property("died", true)
+		
+	set_property("health", new_health)
+	
+func alive() -> bool:
+	return get_property("health") > 0
 
 func get_object():
 	"""Return parent object"""
